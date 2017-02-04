@@ -71,7 +71,7 @@ while (True):
    temperature = (((3300 / 255) * read_from_adc(tempSensorChannel)) - 400) / 19.5
 
    print "Light level is " + str(lightLevel) + "  Temperature is " + str(temperature) + " C"
-   if lightLevel < 40:
+   if lightLevel < 100:
       setColor(0, Color['magenta'])
       setColor(1, Color['cyan'])
    else:

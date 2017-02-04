@@ -3,15 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>5f20818e-82bc-4284-b93a-6a4f11180c64</ProjectGuid>
+    <ProjectGuid>8c1ede98-5831-49d2-a85c-161e50e487a8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>VSWeatherStation.py</StartupFile>
+    <StartupFile>PingPongLed.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>VSWeatherStation</Name>
-    <RootNamespace>VSWeatherStation</RootNamespace>
+    <Name>PingPongLed</Name>
+    <RootNamespace>PingPongLed</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="VSWeatherStation.py" />
+    <Compile Include="PingPongLed.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
