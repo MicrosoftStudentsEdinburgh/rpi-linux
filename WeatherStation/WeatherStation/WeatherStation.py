@@ -105,9 +105,10 @@ while True:
         # Color.keys() returns the list of color names ('red', 'green', 'blue')
         # This is just a way to access color values by index (0, 1, 2) instead of color name
         # Read more on the data type called dictionary (here Color is a dictionary)
-        setColor(0, Color['Blue'])
+        setColor(0, Color['blue'])
         sleep(1)
+        button_pressed = False
     else:
-        setColor(0, Color['Black'])
+        setColor(0, Color['black'])
 
 ########  Main code  ######## 

@@ -33,6 +33,8 @@ button1 = Button(15)
 button2 = Button(14)
 global button1_pressed
 global button2_pressed
+button1_pressed = False
+button2_pressed = False
 
 # Assign button press event handlers
 button1.when_pressed = button1_press_handler
