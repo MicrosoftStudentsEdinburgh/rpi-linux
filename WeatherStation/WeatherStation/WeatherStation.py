@@ -1,13 +1,15 @@
-#!/usr/bin/python
 # Based on https://www.ghielectronics.com/docs/333/fez-hat-and-linux
 # and on https://github.com/bechynsky/FEZHATPY
 # and on https://bitbucket.org/ghi_elect/windows-iot/src
 # and on https://github.com/Gravicode/FezHatBot/blob/master/FezHatBot/
 
+########  Library imports  ######## 
 from Adafruit_PWM_Servo_Driver import PWM
 from Adafruit_I2C import Adafruit_I2C
-import RPi.GPIO as GPIO
+from gpiozero import Button
+from time import sleep
 
+########  Initializations  ######## 
 # Initialise the PWM
 pwm = PWM(0x7F)
 
@@ -20,6 +22,14 @@ lightSensorChannel = 5
 # Channel for temperature sensor on ADC
 tempSensorChannel = 4
 
+# Initialize buttons
+button1 = Button(18)
+button2 = Button(22)
+global button_pressed
+button_pressed = False
+
+
+########  Helper functions  ######## 
 def read_from_adc(channel):
    # See details on the protocol on pages 13 and 14 of the ADS7830 ADS:
    # http://ww1.microchip.com/downloads/en/DeviceDoc/20001942F.pdf
@@ -33,7 +43,13 @@ def read_from_adc(channel):
 
    return adc.readU8(channelAddress)
 
+
 def setColor(led, color):
+    # Set the selected LED to the selected color
+    # Color is encoded as three values for red, green and blue in range 0-255.
+    # Each LED has three channels, one for each color.
+    # The signals are sent to the corresponding channels as PWM with frequencies calculated by scaling
+    # color values from range 0-255 to range 0-4095
 	r = int(4096 * float(color[0]) / 255) - 1
 	g = int(4096 * float(color[1]) / 255) - 1
 	b = int(4096 * float(color[2]) / 255) - 1
@@ -53,6 +69,20 @@ def setColor(led, color):
 			# Blue channel
 			pwm.setPWM(15, 0, b)
 
+
+def button_press_handler():
+    # Button press handler
+    # Implements what happens on button press event
+    global button_pressed
+    button_pressed = True
+    
+
+# Assign button press event handlers
+button1.when_pressed = button_press_handler
+button2.when_pressed = button_press_handler
+
+
+########  Colors  ######## 
 Color = {'red':			[255, 0, 0],
 		 'green':		[0, 255, 0],
 		 'blue':		[0, 0, 255],
@@ -62,6 +92,8 @@ Color = {'red':			[255, 0, 0],
 		 'white':		[255, 255, 255],
 		 'black':		[0, 0, 0]}
 
+
+########  Main code  ######## 
 while (True):
    # Read the light sensor
    lightLevel = read_from_adc(lightSensorChannel)
@@ -71,9 +103,22 @@ while (True):
    temperature = (((3300 / 255) * read_from_adc(tempSensorChannel)) - 400) / 19.5
 
    print "Light level is " + str(lightLevel) + "  Temperature is " + str(temperature) + " C"
-   if lightLevel < 100:
-      setColor(0, Color['magenta'])
-      setColor(1, Color['cyan'])
+
+   max_lightness = 220
+   min_lightness = 70
+   # Select colors based on light intensity, namely calculate 
+   # color index (0, 1, 2, 3) for LED1 and (4, 5, 6) for LED2
+   led1_color = int(4 * (float(lightLevel - min_lightness) / (max_lightness - min_lightness)))
+   led2_color = 4 + int(3 * (float(lightLevel - min_lightness) / (max_lightness - min_lightness)))
+
+   if not button_pressed:
+       # Color.keys() returns the list of color names ('red', 'green', 'blue')
+       # This is just a way to access color values by index (0, 1, 2) instead of color name
+       # Read more on the data type called dictionary (here Color is a dictionary)
+       setColor(0, Color[Color.keys()[led1_color]])
+       setColor(1, Color[Color.keys()[led2_color]])
    else:
-      setColor(0, Color['black'])
-      setColor(1, Color['black'])
+       setColor(0, Color['black'])
+       setColor(1, Color['black'])
+       sleep(1)
+       button_pressed = False

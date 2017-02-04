@@ -1,6 +1,8 @@
+########  Library imports  ######## 
 from gpiozero import LED, Button
 from time import sleep
 
+########  Initializations  ######## 
 # Initialize LEDs
 led0 = LED(18)
 led1 = LED(23)
@@ -43,6 +45,8 @@ player2_misses = 0
 sleep_duration = 1  # Seconds
 speedup_by = 0.1    # Seconds
 
+########  Game implementation  ######## 
+
 print("LED 0")
 led0.on()
 sleep(sleep_duration)
@@ -76,6 +80,8 @@ while sleep_duration >= 0:
     led5.on()
     sleep(sleep_duration)
     led5.off()
+    # At this point, if player pressed a button, a corresponding button
+    # press handler implemented above was fired, which updated button1_pressed flag
     
     if not button1_pressed:
         # button1_press_handler() was not triggerred by the button press event
@@ -109,6 +115,8 @@ while sleep_duration >= 0:
     led0.on()
     sleep(sleep_duration)
     led0.off()
+    # At this point, if player pressed a button, a corresponding button
+    # press handler implemented above was fired, which updated button2_pressed flag
     
     if not button2_pressed:
         # button2_press_handler() was not triggerred by the button press event
