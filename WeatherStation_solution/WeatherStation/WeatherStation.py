@@ -93,21 +93,32 @@ Color = {'red':			[255, 0, 0],
 		 'black':		[0, 0, 0]}
 
 
-########  Example code  ######## 
-while True:
-    # Read the light sensor
-    lightLevel = read_from_adc(lightSensorChannel)
-
-    # Read the temperature sensor
-    # For details on the formula, see page 8 in http://ww1.microchip.com/downloads/en/DeviceDoc/20001942F.pdf
-    temperature = (((3300 / 255) * read_from_adc(tempSensorChannel)) - 400) / 19.5
-    if button_pressed:
-        # Color.keys() returns the list of color names ('red', 'green', 'blue')
-        # This is just a way to access color values by index (0, 1, 2) instead of color name
-        # Read more on the data type called dictionary (here Color is a dictionary)
-        setColor(0, Color['Blue'])
-        sleep(1)
-    else:
-        setColor(0, Color['Black'])
-
 ########  Main code  ######## 
+while (True):
+   # Read the light sensor
+   lightLevel = read_from_adc(lightSensorChannel)
+   
+   # Read the temperature sensor
+   # For details on the formula, see page 8 in http://ww1.microchip.com/downloads/en/DeviceDoc/20001942F.pdf
+   temperature = (((3300 / 255) * read_from_adc(tempSensorChannel)) - 400) / 19.5
+
+   print "Light level is " + str(lightLevel) + "  Temperature is " + str(temperature) + " C"
+
+   max_lightness = 220
+   min_lightness = 70
+   # Select colors based on light intensity, namely calculate 
+   # color index (0, 1, 2, 3) for LED1 and (4, 5, 6) for LED2
+   led1_color = int(4 * (float(lightLevel - min_lightness) / (max_lightness - min_lightness)))
+   led2_color = 4 + int(3 * (float(lightLevel - min_lightness) / (max_lightness - min_lightness)))
+
+   if not button_pressed:
+       # Color.keys() returns the list of color names ('red', 'green', 'blue')
+       # This is just a way to access color values by index (0, 1, 2) instead of color name
+       # Read more on the data type called dictionary (here Color is a dictionary)
+       setColor(0, Color[Color.keys()[led1_color]])
+       setColor(1, Color[Color.keys()[led2_color]])
+   else:
+       setColor(0, Color['black'])
+       setColor(1, Color['black'])
+       sleep(1)
+       button_pressed = False
